@@ -28,7 +28,7 @@ To run this project for local development:
 ```bash
 # This will start a development server with live reloading.
 npm start 
-# Open http://localhost:3000 in your browser (if the port is in use, it will use another).
+# Open http://localhost:8000 in your browser.
 ```
 
 ## Deployment
@@ -38,24 +38,20 @@ npm start
 1.  Push the project folder to a GitHub repository.
 2.  Import the project into Vercel from your Git repository.
 3.  Configure the **Build & Development Settings**:
-    - **Framework Preset:** None (or Other)
-    - **Build Command:** `npm run build`
-    - **Output Directory:** `dist` (This is crucial, Vercel needs to know where the output files are).
+    - **Build Command:** `npm run build` (Vercel should detect this automatically).
+    - **Output Directory:** `.` (You MUST set this to the project root, as that's where `bundle.js` is created).
     - **Install Command:** `npm install` (Should be the default).
-4.  In your Vercel project settings, go to **Environment Variables** and add your `API_KEY`.
-    
-5.  Deploy.
+4.  In your Vercel project settings, go to **Environment Variables** and add your `API_KEY`. If using the SaaS version, also add `SUPABASE_URL` and `SUPABASE_ANON_KEY`.
+5.  Deploy. Vercel will now build and deploy your application correctly.
 
 ### Option 2: VPS with Docker (Advanced)
 
-This project includes a production-ready Docker setup using a multi-stage build with Nginx.
-
 1.  Ensure you have Docker and Docker Compose installed on your VPS.
-
+2.  If using the SaaS version, create a project on Supabase and run the content of `db_schema.sql` in the SQL Editor to create your table.
 3.  Copy the project files to your VPS.
-4.  Create a file named `.env` in the root directory and add your keys (same as local setup).
+4.  Make sure your `.env` file is correctly set up with all required keys.
 5.  Run the application in the background:
     ```bash
     docker-compose up --build -d
     ```
-6.  The application will be accessible on port 80 of your VPS. You may want to configure a reverse proxy to handle SSL.
+6.  The application will be accessible on port 7860 of your VPS. You may want to configure a reverse proxy (like Nginx) to handle SSL.
