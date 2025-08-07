@@ -1,5 +1,7 @@
 
 
+import type React from 'react';
+
 export interface MixedStyle {
   name: string;
   percentage: number;

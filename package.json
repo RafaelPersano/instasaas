@@ -1,0 +1,19 @@
+{
+  "name": "instastyle-app",
+  "version": "1.0.0",
+  "description": "An application for creating stylish text posts for social media.",
+  "scripts": {
+    "start": "esbuild index.tsx --bundle --outfile=bundle.js --servedir=./ --serve-port=8000",
+    "build": "esbuild index.tsx --bundle --outfile=bundle.js --minify --sourcemap"
+  },
+  "dependencies": {
+    "@google/genai": "^1.9.0",
+    "@supabase/supabase-js": "^2.50.5",
+    "jszip": "^3.10.1",
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.0"
+  }
+}

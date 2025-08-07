@@ -1,3 +1,4 @@
+import type React from 'react';
 import type { TextPosition, SubtitleOutlineStyle, PriceTagStyleId, PriceTagPosition, PriceTagColor } from '@/types';
 import { 
     PositionCenterIcon, PositionTopIcon, PositionBottomIcon, PositionLeftIcon, PositionRightIcon,
@@ -5,8 +6,9 @@ import {
     PriceTagCircleIcon, PriceTagRectIcon, PriceTagBurstIcon,
     PositionTopLeftIcon, PositionTopRightIcon, PositionBottomLeftIcon, PositionBottomRightIcon, XCircleIcon
 } from '@/components/icons';
+import type { IconProps } from '@/components/icons';
 
-export const positionOptions: { id: TextPosition; name: string; icon: React.FC<React.SVGProps<SVGSVGElement>> }[] = [
+export const positionOptions: { id: TextPosition; name: string; icon: React.FC<IconProps> }[] = [
     { id: 'left', name: 'Esquerda', icon: PositionLeftIcon },
     { id: 'center', name: 'Centro', icon: PositionCenterIcon },
     { id: 'right', name: 'Direita', icon: PositionRightIcon },
@@ -14,7 +16,7 @@ export const positionOptions: { id: TextPosition; name: string; icon: React.FC<R
     { id: 'bottom', name: 'Base', icon: PositionBottomIcon },
 ];
 
-export const subtitleOutlineOptions: { id: SubtitleOutlineStyle; name: string; icon: React.FC<React.SVGProps<SVGSVGElement>> }[] = [
+export const subtitleOutlineOptions: { id: SubtitleOutlineStyle; name: string; icon: React.FC<IconProps> }[] = [
     { id: 'auto', name: 'Automático', icon: SparklesIcon },
     { id: 'white', name: 'Contorno Branco', icon: OutlineWhiteIcon },
     { id: 'black', name: 'Contorno Preto', icon: OutlineBlackIcon },
@@ -23,13 +25,13 @@ export const subtitleOutlineOptions: { id: SubtitleOutlineStyle; name: string; i
 ];
 
 // --- Price Tag Options ---
-export const priceStyleOptions: { id: PriceTagStyleId; name: string; icon: React.FC<React.SVGProps<SVGSVGElement>> }[] = [
+export const priceStyleOptions: { id: PriceTagStyleId; name: string; icon: React.FC<IconProps> }[] = [
     { id: 'circle', name: 'Círculo', icon: PriceTagCircleIcon },
     { id: 'tag', name: 'Tag', icon: PriceTagRectIcon },
     { id: 'burst', name: 'Explosão', icon: PriceTagBurstIcon },
 ];
 
-export const pricePositionOptions: { id: PriceTagPosition; name: string; icon: React.FC<React.SVGProps<SVGSVGElement>> }[] = [
+export const pricePositionOptions: { id: PriceTagPosition; name: string; icon: React.FC<IconProps> }[] = [
     { id: 'none', name: 'Nenhum', icon: XCircleIcon },
     { id: 'top-left', name: 'Sup. Esquerdo', icon: PositionTopLeftIcon },
     { id: 'top-right', name: 'Sup. Direito', icon: PositionTopRightIcon },

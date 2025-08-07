@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useCallback, useEffect } from 'react';
 import type { Session } from '@supabase/gotrue-js';
 import JSZip from 'jszip';
@@ -14,6 +15,36 @@ import { saveProject, getHistory, deleteProject } from '@/services/databaseServi
 import { supabase } from '@/services/supabaseClient';
 import type { GenerateOptions, AdCopy, BrandConcept, PriceData, FeatureDetails, LandingPageContent, BlogPostContent, PosterContent, RegionalityData, ProjectState, HistoryItem } from '@/types';
 import { RateLimitError } from '@/lib/errors';
+import { AlertTriangleIcon } from '@/components/icons';
+
+const apiKey = process.env.API_KEY;
+
+const EnvErrorScreen: React.FC = () => (
+    <div className="flex items-center justify-center min-h-screen bg-gray-100 p-4">
+        <div className="w-full max-w-2xl text-center bg-red-50 p-8 rounded-lg border-2 border-dashed border-red-200">
+            <AlertTriangleIcon className="w-16 h-16 mx-auto mb-4 text-red-500"/>
+            <h1 className="text-2xl font-bold text-red-800">Configuração Incompleta</h1>
+            <p className="mt-4 text-md text-red-700">
+                A aplicação não pode ser iniciada porque a variável de ambiente <strong>API_KEY</strong> (Google Gemini API Key) não foi configurada.
+            </p>
+            <p className="mt-2 text-sm text-gray-600">
+                Para resolver este problema, você precisa adicionar esta chave secreta às configurações de ambiente do seu projeto na Vercel (ou em um arquivo <code>.env</code> para desenvolvimento local).
+            </p>
+            <div className="mt-6 text-left bg-white p-4 rounded-md border border-gray-200">
+               <h2 className="font-semibold text-gray-800">Instruções para Vercel:</h2>
+               <ol className="list-decimal list-inside mt-2 text-sm space-y-1">
+                   <li>Vá para o painel do seu projeto na Vercel.</li>
+                   <li>Acesse a aba <strong>Settings</strong> e depois <strong>Environment Variables</strong>.</li>
+                   <li>Adicione uma nova variável com o nome <code>API_KEY</code> e cole sua chave no campo de valor.</li>
+                   <li>Salve e faça um novo deploy do projeto (vá em "Deployments" e clique "Redeploy" no último deploy).</li>
+               </ol>
+            </div>
+            <p className="mt-4 text-xs text-gray-500">
+                Se as chaves do Supabase (<code>SUPABASE_URL</code>, <code>SUPABASE_ANON_KEY</code>) também não forem fornecidas, as funcionalidades de login e histórico serão desativadas, mas a aplicação principal funcionará.
+            </p>
+        </div>
+    </div>
+);
 
 
 const App: React.FC = () => {
@@ -452,7 +483,7 @@ const App: React.FC = () => {
 
     const getAllProjectFiles = async (): Promise<Record<string, string>> => {
         const filePaths = [
-            'index.html', 'index.tsx', 'metadata.json', 'App.tsx', 'types.ts',
+            'index.html', 'index.tsx', 'metadata.json', 'App.tsx', 'types.ts', 'package.json',
             'components/Header.tsx', 'components/PromptForm.tsx', 'components/SqlViewer.tsx', 'components/icons.tsx',
             'components/HistorySidebar.tsx', 'components/GuideModal.tsx', 'components/Notification.tsx',
             'services/supabaseClient.ts', 'services/geminiService.ts', 'services/databaseService.ts',
@@ -480,15 +511,24 @@ const App: React.FC = () => {
 
 This is a generated project from the InstaStyle AI application.
 
+## Prerequisites
+
+- Node.js and npm (or yarn/pnpm)
+- An account on a deployment platform like Vercel or a VPS provider.
+- A Google Gemini API Key.
+- (For SaaS version) A Supabase account.
+
 ## Setup
 
-1.  Create a file named \`.env\` in the root of the project.
-2.  Add your Google Gemini API key to it:
+1.  Unzip the project files.
+2.  Open a terminal in the project directory and run \`npm install\` to install dependencies.
+3.  Create a file named \`.env\` in the root of the project.
+4.  Add your Google Gemini API key to it:
     \`\`\`
     API_KEY=your_gemini_api_key_here
     \`\`\`
 ${isSaaS ? `
-3.  Add your Supabase credentials to the \`.env\` file:
+5.  Add your Supabase credentials to the \`.env\` file:
     \`\`\`
     SUPABASE_URL=your_supabase_project_url_here
     SUPABASE_ANON_KEY=your_supabase_anon_key_here
@@ -496,25 +536,52 @@ ${isSaaS ? `
 ` : ''}
 ## Running Locally
 
-To run this project locally, you'll need Node.js and npm.
+To run this project for local development:
 
 \`\`\`bash
-# This project uses esbuild for development.
-# Install it globally or use npx.
-npm install -g esbuild
-
-# Run the development server
+# This will start a development server with live reloading.
 npm start 
-# (You may need to add a start script to package.json: "start": "esbuild --servedir=./ --bundle index.tsx --outfile=bundle.js")
+# Open http://localhost:8000 in your browser.
 \`\`\`
 
 ## Deployment
 
-For detailed instructions on how to deploy this project to Vercel, Hugging Face (Docker), or a VPS, please refer to the comprehensive guide inside the downloaded HTML file.
+### Option 1: Vercel (Recommended for Standalone)
+
+1.  Push the project folder to a GitHub repository.
+2.  Connect your repository to Vercel.
+3.  Vercel will automatically detect it's a static project with a build step. It will use the \`npm run build\` command.
+4.  In your Vercel project settings, go to "Environment Variables" and add your \`API_KEY\`. If using the SaaS version, also add \`SUPABASE_URL\` and \`SUPABASE_ANON_KEY\`.
+5.  Vercel will build and deploy your application.
+
+### Option 2: VPS with Docker (Recommended for SaaS)
+
+1.  Ensure you have Docker and Docker Compose installed on your VPS.
+2.  If using the SaaS version, create a project on Supabase. Go to the 'SQL Editor', paste the content of \`db_schema.sql\` and run it to create your table.
+3.  Copy the project files to your VPS.
+4.  Make sure your \`.env\` file is correctly set up with all required keys.
+5.  Run the application in the background:
+    \`\`\`bash
+    docker-compose up --build -d
+    \`\`\`
+6.  The application will be accessible on port 7860 of your VPS. You may want to configure a reverse proxy (like Nginx) to handle SSL and serve it on port 80/443.
+
+### Option 3: Hugging Face Spaces (Docker)
+1.  Create a new 'Space' on Hugging Face, choosing the 'Docker' SDK.
+2.  Upload the project files to the Space repository.
+3.  In the Space settings, add your \`API_KEY\` (and Supabase keys if needed) as 'Secrets'.
+4.  The Space will build the Docker image and start the application.
 `;
 
         files['vercel.json'] = `
 {
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "." }
+    }
+  ],
   "rewrites": [
     { "source": "/(.*)", "destination": "/index.html" }
   ]
@@ -634,34 +701,10 @@ CREATE POLICY "Users can delete their own projects." ON projects FOR DELETE USIN
                 fileContents += `<h3 id="file-${path.replace(/[/.]/g, '-')}">${path}</h3><pre><code>${escapedContent}</code></pre>`;
             }
             
-            const guide = isSaaS ? `
-                <h2>Guia de Implantação (SaaS com VPS)</h2>
-                <ol>
-                    <li><strong>Servidor:</strong> Obtenha uma VPS (ex: DigitalOcean, Vultr, AWS).</li>
-                    <li><strong>Docker:</strong> Instale Docker e Docker Compose na sua VPS.</li>
-                    <li><strong>Supabase:</strong> Crie um projeto no Supabase. Vá para 'SQL Editor', cole o conteúdo de <code>db_schema.sql</code> e execute.</li>
-                    <li><strong>Credenciais:</strong> No Supabase, vá em 'Project Settings' > 'API' e copie sua URL e a chave 'anon public'.</li>
-                    <li><strong>Código:</strong> Clone o projeto ZIP para sua VPS.</li>
-                    <li><strong>Variáveis de Ambiente:</strong> Crie um arquivo <code>.env</code> na raiz do projeto com suas chaves:
-                        <pre><code>API_KEY=sua_chave_gemini\nSUPABASE_URL=sua_url_supabase\nSUPABASE_ANON_KEY=sua_chave_anon_supabase</code></pre>
-                    </li>
-                    <li><strong>Execute:</strong> Rode <code>docker-compose up --build -d</code>. A aplicação estará rodando na porta 7860.</li>
-                </ol>
-            ` : `
-                <h2>Guia de Implantação (Standalone)</h2>
-                <h3>Opção 1: Vercel (Recomendado)</h3>
-                <ol>
-                    <li>Faça upload do projeto ZIP para um repositório no GitHub.</li>
-                    <li>Conecte seu repositório ao Vercel.</li>
-                    <li>Adicione sua <code>API_KEY</code> como uma variável de ambiente nas configurações do projeto Vercel.</li>
-                    <li>O deploy será feito automaticamente.</li>
-                </ol>
-                <h3>Opção 2: Hugging Face (Docker)</h3>
-                 <ol>
-                    <li>Faça upload do projeto ZIP para um novo 'Space' no Hugging Face, escolhendo o SDK 'Docker'.</li>
-                    <li>Adicione sua <code>API_KEY</code> como um 'Secret' nas configurações do Space.</li>
-                    <li>O Space irá construir e iniciar a aplicação.</li>
-                </ol>
+            const guide = `
+                <h2>Guia de Implantação</h2>
+                <p>Estas são as instruções para rodar o projeto que você baixou. O arquivo README.md contém esta mesma informação.</p>
+                <pre><code>${deploymentFiles['README.md']}</code></pre>
             `;
 
             const html = `
@@ -726,6 +769,9 @@ CREATE POLICY "Users can delete their own projects." ON projects FOR DELETE USIN
         }
     };
 
+    if (!apiKey) {
+        return <EnvErrorScreen />;
+    }
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
