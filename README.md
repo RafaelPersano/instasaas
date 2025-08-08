@@ -15,15 +15,16 @@ This is a generated project from the InstaStyle AI application.
 
 To run this project locally, you'll need Node.js and npm.
 
-```bash
-# This project uses esbuild for development.
-# Install it globally or use npx.
-npm install -g esbuild
+1.  **Install dependencies:**
+    ```bash
+    npm install
+    ```
 
-# Run the development server
-npm start 
-# (You may need to add a start script to package.json: "start": "esbuild --servedir=./ --bundle index.tsx --outfile=bundle.js")
-```
+2.  **Run the development server:**
+    ```bash
+    npm start
+    ```
+    This will start a local server and watch for changes. Open your browser to the address provided (usually http://localhost:8000).
 
 ## Deployment
 

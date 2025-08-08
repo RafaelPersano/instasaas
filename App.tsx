@@ -1,5 +1,6 @@
 
 
+
 import React, { useState, useCallback, useEffect } from 'react';
 import type { Session } from '@supabase/gotrue-js';
 import JSZip from 'jszip';
@@ -474,6 +475,29 @@ const App: React.FC = () => {
 
     const generateDeploymentFiles = (isSaaS: boolean): Record<string, string> => {
         const files: Record<string, string> = {};
+        
+        files['package.json'] = `
+{
+  "name": "instastyle-project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "esbuild index.tsx --bundle --outfile=bundle.js --servedir=. --watch",
+    "build": "esbuild index.tsx --bundle --outfile=bundle.js --minify"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "@supabase/supabase-js": "^2.50.5",
+    "@google/genai": "^1.9.0",
+    "@supabase/gotrue-js": "^2.71.1",
+    "jszip": "^3.10.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.2"
+  }
+}
+`;
 
         files['README.md'] = `
 # InstaStyle Project
@@ -498,15 +522,16 @@ ${isSaaS ? `
 
 To run this project locally, you'll need Node.js and npm.
 
-\`\`\`bash
-# This project uses esbuild for development.
-# Install it globally or use npx.
-npm install -g esbuild
+1.  **Install dependencies:**
+    \`\`\`bash
+    npm install
+    \`\`\`
 
-# Run the development server
-npm start 
-# (You may need to add a start script to package.json: "start": "esbuild --servedir=./ --bundle index.tsx --outfile=bundle.js")
-\`\`\`
+2.  **Run the development server:**
+    \`\`\`bash
+    npm start
+    \`\`\`
+    This will start a local server and watch for changes. Open your browser to the address provided (usually http://localhost:8000).
 
 ## Deployment
 
@@ -564,6 +589,8 @@ CMD ["gunicorn", "--bind", "0.0.0.0:7860", "app:app"]
 node_modules
 .git
 .env
+bundle.js
+bundle.js.map
 `;
         if (isSaaS) {
             files['docker-compose.yml'] = `
@@ -654,7 +681,7 @@ CREATE POLICY "Users can delete their own projects." ON projects FOR DELETE USIN
                     <li>Faça upload do projeto ZIP para um repositório no GitHub.</li>
                     <li>Conecte seu repositório ao Vercel.</li>
                     <li>Adicione sua <code>API_KEY</code> como uma variável de ambiente nas configurações do projeto Vercel.</li>
-                    <li>O deploy será feito automaticamente.</li>
+                    <li>O deploy será feito automaticamente. O Vercel usará o script 'build' do <code>package.json</code>.</li>
                 </ol>
                 <h3>Opção 2: Hugging Face (Docker)</h3>
                  <ol>

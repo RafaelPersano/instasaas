@@ -1,1 +1,21 @@
-// Failed to fetch content for package.json
+
+{
+  "name": "instastyle-project",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "esbuild index.tsx --bundle --outfile=bundle.js --servedir=. --watch",
+    "build": "esbuild index.tsx --bundle --outfile=bundle.js --minify"
+  },
+  "dependencies": {
+    "react": "^19.1.0",
+    "react-dom": "^19.1.0",
+    "@supabase/supabase-js": "^2.50.5",
+    "@google/genai": "^1.9.0",
+    "@supabase/gotrue-js": "^2.71.1",
+    "jszip": "^3.10.1"
+  },
+  "devDependencies": {
+    "esbuild": "^0.20.2"
+  }
+}
