@@ -4,18 +4,20 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "esbuild index.tsx --bundle --outfile=bundle.js --servedir=. --watch",
-    "build": "esbuild index.tsx --bundle --outfile=bundle.js --minify"
+    "start": "esbuild index.tsx --bundle --outfile=bundle.js --jsx=automatic --loader:.ts=tsx --servedir=. --watch",
+    "build": "esbuild index.tsx --bundle --outfile=bundle.js --jsx=automatic --loader:.ts=tsx --minify"
   },
   "dependencies": {
-    "react": "^19.1.0",
-    "react-dom": "^19.1.0",
-    "@supabase/supabase-js": "^2.50.5",
-    "@google/genai": "^1.9.0",
+    "react": "next",
+    "react-dom": "next",
+    "@google/genai": "^1.13.0",
     "@supabase/gotrue-js": "^2.71.1",
+    "@supabase/supabase-js": "^2.54.0",
     "jszip": "^3.10.1"
   },
   "devDependencies": {
-    "esbuild": "^0.20.2"
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "esbuild": "^0.23.0"
   }
 }
